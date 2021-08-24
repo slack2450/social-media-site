@@ -84,7 +84,7 @@ def register():
 
 @app.route('/api/v1/logout', methods=['GET'])
 def logout():
-    logout_user(current_user)
+    logout_user()
 
     return { 'success': True }
 
