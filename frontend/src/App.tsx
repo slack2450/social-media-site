@@ -1,6 +1,4 @@
-import React, { useEffect } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react';
 
 import { Switch, Route, useHistory } from 'react-router-dom';
 import { Button, Toolbar, AppBar, Typography, IconButton, Menu, MenuItem } from '@material-ui/core';
@@ -23,6 +21,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
+      cursor: 'pointer',
     },
   }),
 );
@@ -33,7 +32,7 @@ function App() {
   const auth = useAuth();
   const history = useHistory();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {

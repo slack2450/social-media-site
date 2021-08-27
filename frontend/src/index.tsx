@@ -1,5 +1,4 @@
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { createTheme, MuiThemeProvider, CssBaseline } from '@material-ui/core';
@@ -12,6 +11,7 @@ import axios from 'axios';
 const theme = createTheme({});
 
 axios.defaults.baseURL = process.env.NODE_ENV === 'production' ? 'https://flaskisbad.com/api/v1' : 'http://localhost:5000/api/v1'
+axios.defaults.withCredentials = process.env.NODE_ENV !== 'production';
 
 ReactDOM.render(
   <MuiThemeProvider theme={theme}>

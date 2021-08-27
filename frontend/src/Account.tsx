@@ -1,10 +1,10 @@
-import { Avatar, Button, Container, FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, makeStyles, OutlinedInput, Snackbar, TextField, Typography } from "@material-ui/core"
-import { AccountCircleOutlined, Visibility, VisibilityOff } from "@material-ui/icons";
-import axios from "axios";
+import { Avatar, Button, Container, InputAdornment, makeStyles, Snackbar, TextField, Typography } from "@material-ui/core"
+import { AccountCircleOutlined } from "@material-ui/icons";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import { FieldSpecificAPIResponse, useAuth, UserState } from "./use-auth";
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert'
+import PasswordField from "./PasswordField";
 
 function Alert(props: AlertProps) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -49,18 +49,8 @@ function Account() {
         error: '',
     })
 
-    const [showPassword, setShowPassword] = useState(false);
-
     const handleChange = (prop: keyof UserState) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setValues({ ...values, [prop]: event.target.value });
-    };
-
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
     };
 
     useEffect(() => {
@@ -131,39 +121,16 @@ function Account() {
                         value={values.displayName}
                         onChange={handleChange('displayName')}
                     />
-                    <FormControl variant="outlined" fullWidth margin="dense">
-                        <InputLabel
-                            htmlFor="outlined-adornment-password"
-                            error={apiResponse.field === 'password'}
-                        >
-                            New Password
-                        </InputLabel>
-                        <OutlinedInput
-                            id="outlined-adornment-password"
-                            type={showPassword ? 'text' : 'password'}
-                            value={values.password}
-                            onChange={handleChange('password')}
-                            endAdornment={
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={handleClickShowPassword}
-                                        onMouseDown={handleMouseDownPassword}
-                                        edge="end"
-                                    >
-                                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                                    </IconButton>
-                                </InputAdornment>
-                            }
-                            labelWidth={110}
-                            error={apiResponse.field === 'password'}
-                        />
-                        <FormHelperText
-                            error={apiResponse.field === 'password'}
-                        >
-                            {apiResponse.field === 'password' ? apiResponse.error : 'Leave empty to leave your password unchanged'}
-                        </FormHelperText>
-                    </FormControl>
+                    <PasswordField
+                        variant="outlined"
+                        label="New Password"
+                        id="password"
+                        margin="dense"
+                        value={values.password}
+                        onChange={handleChange('password')}
+                        error={apiResponse.field === 'password'}
+                        helperText={apiResponse.field === 'password' ? apiResponse.error : 'Leave empty to leave your password unchanged'}
+                    />
                     <Button
                         type="submit"
                         fullWidth
@@ -188,7 +155,8 @@ function Account() {
                     </Snackbar>
                 </form>
             </div>
-        </Container>)
+        </Container>
+    );
 }
 
 export default Account

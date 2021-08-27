@@ -1,7 +1,8 @@
-import { Typography, makeStyles, Container, Avatar, TextField, Grid, InputAdornment, FormControl, InputLabel, OutlinedInput, IconButton, Button, FormHelperText } from "@material-ui/core"
-import { LockOutlined, Visibility, VisibilityOff } from "@material-ui/icons";
+import { Typography, makeStyles, Container, Avatar, TextField, Grid, InputAdornment, Button } from "@material-ui/core"
+import { LockOutlined } from "@material-ui/icons";
 import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
+import PasswordField from "./PasswordField";
 
 import { UserState, useAuth } from "./use-auth";
 
@@ -52,18 +53,8 @@ function Register() {
         message: '',
     })
 
-    const [showPassword, setShowPassword] = React.useState(false);
-
     const handleChange = (prop: keyof UserState) => (event: React.ChangeEvent<HTMLInputElement>) => {
         setValues({ ...values, [prop]: event.target.value });
-    };
-
-    const handleClickShowPassword = () => {
-        setShowPassword(!showPassword);
-    };
-
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-        event.preventDefault();
     };
 
     useEffect(() => {
@@ -118,7 +109,7 @@ function Register() {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField className={classes.fieldFix}
+                            <TextField 
                                 variant="outlined"
                                 margin="normal"
                                 required
@@ -134,37 +125,17 @@ function Register() {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <FormControl variant="outlined" fullWidth>
-                                <InputLabel
-                                    htmlFor="outlined-adornment-password"
-                                    error={error.field === 'password'}
-                                >
-                                    Password
-                                </InputLabel>
-                                <OutlinedInput
-                                    id="outlined-adornment-password"
-                                    type={showPassword ? 'text' : 'password'}
-                                    value={values.password}
-                                    onChange={handleChange('password')}
-                                    endAdornment={
-                                        <InputAdornment position="end">
-                                            <IconButton
-                                                aria-label="toggle password visibility"
-                                                onClick={handleClickShowPassword}
-                                                onMouseDown={handleMouseDownPassword}
-                                                edge="end"
-                                            >
-                                                {showPassword ? <Visibility /> : <VisibilityOff />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    }
-                                    labelWidth={70}
-                                    error={error.field === 'password'}
-                                />
-                                <FormHelperText
-                                    error={error.field === 'password'}
-                                >{error.field === 'password' ? error.message : ''}</FormHelperText>
-                            </FormControl>
+                            <PasswordField
+                                variant="outlined"
+                                label="Password"
+                                id="password"
+                                margin="normal"
+                                value={values.password}
+                                onChange={handleChange('password')}
+                                error={error.field === 'password'}
+                                helperText={error.field === 'password' ? error.message : ''}
+                                className={classes.fieldFix}
+                            />
                         </Grid>
                     </Grid>
                     <Button

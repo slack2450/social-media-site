@@ -2,6 +2,7 @@ import { Avatar, Button, Container, makeStyles, TextField, Typography } from "@m
 import { LockOutlined } from "@material-ui/icons";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import PasswordField from "./PasswordField";
 import { useAuth } from "./use-auth";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: theme.palette.primary.main,
     },
     form: {
-        width: '100%', // Fix IE 11 issue.
+        width: '100%',
         marginTop: theme.spacing(1),
     },
     submit: {
@@ -55,7 +56,6 @@ function Login() {
                     <TextField
                         variant="outlined"
                         margin="normal"
-                        required
                         fullWidth
                         id="userIdentifier"
                         label="Username or email"
@@ -67,21 +67,16 @@ function Login() {
                         error={userIdentifierError}
                         helperText={userIdentifierHelperText}
                     />
-                    <TextField
+                    <PasswordField
                         variant="outlined"
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
                         label="Password"
-                        type="password"
                         id="password"
-                        autoComplete="current-password"
+                        margin="normal"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         error={passwordError}
                         helperText={passwordHelperText}
-                    />
+                     />
                     <Button
                         type="submit"
                         fullWidth

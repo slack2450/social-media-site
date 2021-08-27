@@ -1,4 +1,3 @@
-from logging import error
 from operator import and_
 from backend import app, db
 from backend.models import Like, User, Post
@@ -29,9 +28,12 @@ def login():
         return { 'sucess': False, 'error': 'Username or Email not found', 'field': 'userIdentifier' }
 
     if not user.check_password(password):
+        app.logger.warn('@<%s> failed to enter the correct password', user.username)
         return { 'sucess': False, 'error': 'Incorrect password', 'field': 'password' }
     
     login_user(user)
+
+    app.logger.info('@<%s> logged in successfully', user.username)
 
     return {
         'success': True,
@@ -72,6 +74,8 @@ def register():
 
     login_user(user)
 
+    app.logger.info('<@%s> just registered', user.username)
+
     return {
         'success': True,
         'user': {
@@ -84,6 +88,9 @@ def register():
 
 @app.route('/api/v1/logout', methods=['GET'])
 def logout():
+    if current_user.is_authenticated:
+        app.logger.info('<@%s> just signed out', current_user.username)
+
     logout_user()
 
     return { 'success': True }
@@ -103,6 +110,8 @@ def post():
     db.session.add(post)
     db.session.commit()
 
+    app.logger.info('<@%s> just created a new post with id "%d"', current_user.username, post.id)
+
     return { 'success': True }
 
 @app.route('/api/v1/like', methods=['POST'])
@@ -118,6 +127,7 @@ def like():
     post = Post.query.get(payload['post'])
 
     if post is None:
+        app.logger.error('<@%s> tried to like a non existant post', current_user.username)
         return { 'success': False, 'error': 'Your request must contain a valid post to like'}
 
     existing_like = Like.query.filter(and_(Like.owner_id == current_user.id, Like.post_id == payload['post'])).first()
@@ -129,6 +139,8 @@ def like():
 
     db.session.add(like)
     db.session.commit()
+
+    app.logger.info('<@%s> just like post "%d"', current_user.username, like.post_id)
 
     return { 'success': True }
 
@@ -154,6 +166,8 @@ def unlike():
 
     db.session.delete(existing_like)
     db.session.commit()
+
+    app.logger.info('<@%s> just removed their like on post: "%d"', current_user.username, existing_like.post_id)
 
     return { 'success': True }
 
@@ -215,5 +229,7 @@ def user():
         current_user.set_password(payload['password'])
 
     db.session.commit()
+
+    app.logger.info('<@%s> just updated their account details', current_user.username)
 
     return { 'success': True }

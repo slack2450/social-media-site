@@ -104,7 +104,7 @@ function Home() {
                     {
                         posts.map((post) => {
                             return (
-                                <Grid item xs={12}>
+                                <Grid item xs={12} key={post.id}>
                                     <Post
                                         autoComplete='off'
                                         variant='outlined'
